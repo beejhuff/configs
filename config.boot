@@ -7,26 +7,95 @@ firewall {
     log-martians enable
     name WAN_IN {
         default-action drop
-        description "WAN to internal"
+        description "incoming on WAN"
         rule 10 {
             action accept
+            description "WAN valid established"
             state {
                 established enable
                 related enable
             }
         }
+
+        /* Rules allowing WAN -> DMZ connections go here. */
+        
         rule 20 {
             action drop
+            description "WAN new & invalid"
             state {
                 invalid enable
+                new enable
             }
         }
     }
     name WAN_LOCAL {
         default-action drop
         description "WAN to router"
+    }
+    name DMZ_IN {
+        default-action drop
+        description "incoming to DMZ "
         rule 10 {
             action accept
+            description "DMZ valid established"
+            state {
+                established enable
+                related enable
+            }
+        }
+        rule 20 {
+            action accept
+            description "DMZ new to WAN"
+            destination {
+                group {
+                    address-group ADDRv4_eth1
+                }
+            }
+            state {
+                new enable
+            }
+        }
+        rule 30 {
+            action drop
+            description "DMZ invalid"
+            state {
+                invalid enable
+            }
+        }
+    }
+    name DMZ_LOCAL {
+        default-action drop
+        description "DMZ to router"
+    }
+    name LAN_IN {
+        default-action drop
+        description "incoming on LAN"
+        rule 10 {
+            action accept
+            description "LAN all valid"
+            state {
+                established enable
+                new enable
+                related enable
+            }
+        }
+        rule 20 {
+            action drop
+            description "LAN invalid"
+            state {
+                invalid enable
+            }
+        }
+    }
+
+    /* Rules allowing LAN -> LOCAL connections go here. */
+
+    name LAN_OUT {
+        default-action drop
+        description "LAN outcoming"
+        rule 10 {
+            action accept
+            description "LAN valid existing"
             state {
                 established enable
                 related enable
@@ -34,8 +103,10 @@ firewall {
         }
         rule 20 {
             action drop
+            description "LAN new & invalid"
             state {
                 invalid enable
+                new enable
             }
         }
     }
