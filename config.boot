@@ -212,7 +212,7 @@ service {
                 }
                 static-mapping %DEVICEHOSTNAME1% {
                     ip-address 192.168.1.100
-                    mac-address e8:39:35:90:27:24
+                    mac-address %MACADDR%
                 }
                 unifi-controller 192.168.1.30
             }
@@ -229,7 +229,7 @@ service {
                 }
                 static-mapping UAP-AC {
                     ip-address 192.168.2.2
-                    mac-address 24:a4:3c:c0:1f:5b
+                    mac-address %MACADDR%
                 }
                 unifi-controller 192.168.1.30
             }
